@@ -1,57 +1,30 @@
-alpha = 'abcdefghijklmnopqrstuvwxyz'
-alpha_dic_nl = dict(zip(range(26), alpha))
-alpha_dic_ln = dict(zip(alpha, range(26)))
+""" One Time Pad Module
+"""
+import codings
+from functools import partial as curry
+#XXX: NOTE THAT THIS IS STILL NOT FULLY TESTED
 
-message = [28, 14, 19, 28, 39, 4, 31, 28, 18, 11, 36]
-hobo = 'hoboesthudofhorror'
+## One Time Pad Translation Functions ########################################
 
-def transcode(x, mapping):
-    if x is None or x not in mapping:
+def mod(x,y, direction='decode'):
+    if x is None or y is None:
         return None
-    return mapping[x]
+    if direction == 'decode':
+        return (x-y) % 26
+    else:
+        return (x+y) % 26
 
-def pad_func(x,y):
-	if x is None or y is None:
-		return None
-	return (x-y) % 26
+def xor(x,y, *args, **kwargs):
+    if x is None or y is None:
+        return None
+    return x^y
 
-def conv_nl(x):
-	if x is None:
-		return None
-	return dec_nl[x]
+## Encode / Decode ###########################################################
 
-def conv_ln(x):
-	if x is None:
-		return None
-	return dec_ln[x]
+def encode(message, pad, otp_func):
+    otp_func = curry(otp_func, direction='encode')
+    return map(otp_func, message, pad)
 
-def alpha_nl(x):
-	if x is None:
-		return None
-	return alpha_dic_nl[x]
-
-def alpha_ln(x):
-	if x is None:
-		return None
-	return alpha_dic_ln[x]
-
-def one_time(message, pad):
-	return ''.join(filter(lambda x:x, map(alpha_nl, map(pad_func, message, pad))))
-
-def right_shift(x):
-	return x[1:]+[x[0]]
-
-def left_shift(x):
-	return x[-1]+[x[:-1]]
-
-def pad_rot(message, pad):
-	print one_time(message, pad)
-	for i in xrange(len(pad)):
-		message = right_shift(message)
-		print one_time(message, pad)
-
-def mess_rot(message, pad):
-	print one_time(message, pad)
-	for i in xrange(len(message)):
-		message = right_shift(message)
-		print one_time(message, pad)
+def decode(message, pad, otp_func):
+    otp_func = curry(otp_func, direction='decode')
+    return map(otp_func, message, pad)

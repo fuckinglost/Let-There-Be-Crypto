@@ -12,7 +12,10 @@ wiki, or in a feature request.
 Currently every type of cipher is implemented in a seperate python file
 in the `cipher` directory.  If you want to contribute to an existing cipher
 implementation modify the appropriate file.  If you want to contribute a new
-cipher create a file with the appropriate name.
+cipher create a file with the appropriate name. If you add a new file, copy
+skel.py and use it as a stub for implementing the new cipher module. Further
+standardization will likely occur as we get more modules and see how everything
+looks.
 
 The analysis portion of this library currently has no defined structure.  When
 someone places something in the `analyze` folder we can start looking at how
